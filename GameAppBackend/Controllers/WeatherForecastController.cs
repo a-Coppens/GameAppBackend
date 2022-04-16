@@ -47,6 +47,7 @@ namespace GameAppBackend.Controllers
             {
                 HttpResponseMessage httpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
                 return new JsonResult(httpResponseMessage);
+                
             }
         }
     }
