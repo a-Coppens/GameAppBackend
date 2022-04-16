@@ -8,7 +8,7 @@ namespace GameAppBackend.Service
         private AuthUserRepository _authUserRepository;
         private readonly String _attemptedLoginUserName;
         private readonly String _attemptedLoginPassword;
-        private readonly String _userSalt;
+        private readonly String? _userSalt;
 
         public AuthUserService(string userName, string password)
         {
