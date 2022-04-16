@@ -36,7 +36,7 @@ namespace GameAppBackend.Controllers
                 {
                     throw;
                 }
-                return Unauthorized("");
+                return Unauthorized("Failure");
             }
             else
             {
