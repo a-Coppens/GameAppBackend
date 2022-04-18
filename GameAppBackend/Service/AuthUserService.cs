@@ -1,26 +1,24 @@
-﻿using GameAppBackend.Repositories;
+﻿using GameAppBackend.Entities;
+using GameAppBackend.Models;
+using GameAppBackend.Repositories;
 using BCryptor = BCrypt.Net.BCrypt;
 
 namespace GameAppBackend.Service
 {
     public class AuthUserService : Interfaces.IAuthUserService
     {
-        private AuthUserRepository _authUserRepository;
-        private readonly String _attemptedLoginUserName;
-        private readonly String _attemptedLoginPassword;
-        private readonly String? _userSalt;
+        private UserRepository _userRepository;
+        private LoginRequest _loginRequest;
 
-        public AuthUserService(string userName, string password)
+        public AuthUserService(LoginRequest loginRequest, UserDataContext context)
         {
-            _authUserRepository = new AuthUserRepository();
-            _attemptedLoginUserName = userName;
-            _attemptedLoginPassword = password;
-            _userSalt = _authUserRepository.getAuthUser().Salt;
+            _userRepository = new UserRepository(context);
+            _loginRequest = loginRequest;
         }
 
         public bool Login()
         {
-            return doesPasswordMatchExisting();
+            return DoesPasswordMatchExisting();
         }
 
         public bool Register()
@@ -28,16 +26,13 @@ namespace GameAppBackend.Service
             throw new NotImplementedException();
         }
 
-        public bool doesPasswordMatchExisting()
+        public bool DoesPasswordMatchExisting()
         {
-            String? existingPwd = _authUserRepository.getAuthUser().Password;
-            String? existingUserName = _authUserRepository.getAuthUser().UserName;
+            var existingUser =  _userRepository.GetAuthUser(_loginRequest.Username);
 
-            String salter = BCryptor.GenerateSalt();
-            Console.WriteLine("Salt: " + salter);
-            String hashedPasswordAttempt = BCryptor.HashPassword(_attemptedLoginPassword, _authUserRepository.getAuthUser().Salt);
+            String hashedPasswordAttempt = BCryptor.HashPassword(_loginRequest.Password, existingUser.Salt);
 
-            if(hashedPasswordAttempt.Equals(existingPwd) && _attemptedLoginUserName.Equals(existingUserName))
+            if(hashedPasswordAttempt.Equals(existingUser.Password) && _loginRequest.Username.Equals(existingUser.UserName))
             {
                 return true;
             }

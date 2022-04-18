@@ -1,9 +1,11 @@
-﻿namespace GameAppBackend.Service.Interfaces
+﻿using GameAppBackend.Models;
+
+namespace GameAppBackend.Service.Interfaces
 {
     public interface IAuthUserService
     {
         bool Login();
         bool Register();
-        bool doesPasswordMatchExisting();
+        bool DoesPasswordMatchExisting();
     }
 }
